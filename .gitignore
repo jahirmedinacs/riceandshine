@@ -3,6 +3,26 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Linux/Unix specific ignores
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Sensitive files
+*.pem
+*.key
+*.secret
+*_rsa
+*_dsa
+*_ecdsa
+*_ed25519
+
+# Ansible specific
+*.retry
+.vault_pass
+
 # User-specific files
 *.rsuser
 *.suo
