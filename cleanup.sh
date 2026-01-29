@@ -11,8 +11,6 @@
 #   -v, --verbose   Show detailed output
 #
 
-set -e
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -117,7 +115,7 @@ if [ -d "$HOME/.cache" ]; then
     CACHE_SIZE=$(du -sh "$HOME/.cache" 2>/dev/null | cut -f1)
     log "Cache size: $CACHE_SIZE"
     if [ $DRY_RUN -eq 0 ]; then
-        find "$HOME/.cache" -type f -atime +30 -delete 2>/dev/null || warn "Could not clean some cache files"
+        find "$HOME/.cache" -type f -atime +30 -delete 2>/dev/null && log "Cache cleaned" || warn "Could not clean some cache files"
     else
         echo "Would clean files in $HOME/.cache older than 30 days"
     fi
@@ -129,7 +127,7 @@ if [ -d "$HOME/.cache/thumbnails" ]; then
     THUMB_SIZE=$(du -sh "$HOME/.cache/thumbnails" 2>/dev/null | cut -f1)
     log "Thumbnail cache size: $THUMB_SIZE"
     if [ $DRY_RUN -eq 0 ]; then
-        rm -rf "$HOME/.cache/thumbnails"/* 2>/dev/null || warn "Could not clean thumbnail cache"
+        [ -n "$HOME" ] && [ -d "$HOME/.cache/thumbnails" ] && rm -rf "$HOME/.cache/thumbnails"/* 2>/dev/null && log "Thumbnails cleaned" || warn "Could not clean thumbnail cache"
     else
         echo "Would clean thumbnail cache"
     fi
@@ -141,7 +139,7 @@ if [ -d "$HOME/.local/share/Trash" ]; then
     TRASH_SIZE=$(du -sh "$HOME/.local/share/Trash" 2>/dev/null | cut -f1)
     log "Trash size: $TRASH_SIZE"
     if [ $DRY_RUN -eq 0 ]; then
-        rm -rf "$HOME/.local/share/Trash"/* 2>/dev/null || warn "Could not empty trash"
+        [ -n "$HOME" ] && [ -d "$HOME/.local/share/Trash" ] && rm -rf "$HOME/.local/share/Trash"/* 2>/dev/null && log "Trash emptied" || warn "Could not empty trash"
     else
         echo "Would empty trash"
     fi
@@ -170,12 +168,12 @@ fi
 # Clean old browser cache if Firefox is installed
 if [ -d "$HOME/.mozilla/firefox" ]; then
     log "Checking Firefox cache..."
-    FIREFOX_CACHE=$(find "$HOME/.mozilla/firefox" -type d -name "cache2" 2>/dev/null)
-    if [ -n "$FIREFOX_CACHE" ]; then
+    FIREFOX_CACHE=$(find "$HOME/.mozilla/firefox" -type d -name "cache2" 2>/dev/null | head -1)
+    if [ -n "$FIREFOX_CACHE" ] && [ -d "$FIREFOX_CACHE" ]; then
         FIREFOX_SIZE=$(du -sh "$FIREFOX_CACHE" 2>/dev/null | cut -f1)
         log "Firefox cache size: $FIREFOX_SIZE"
         if [ $DRY_RUN -eq 0 ]; then
-            rm -rf "$FIREFOX_CACHE"/* 2>/dev/null || warn "Could not clean Firefox cache"
+            rm -rf "$FIREFOX_CACHE"/* 2>/dev/null && log "Firefox cache cleaned" || warn "Could not clean Firefox cache"
         else
             echo "Would clean Firefox cache"
         fi

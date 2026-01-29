@@ -36,8 +36,8 @@ cp -r dotfiles/config/* ~/.config/
 2. Symlink dotfiles:
    ```bash
    cd dotfiles
+   # This will create symlinks in ~ for files in the home directory
    stow -t ~ home
-   stow -t ~/.config config
    ```
 
 ## Common Dotfiles to Add

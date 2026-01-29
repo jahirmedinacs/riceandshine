@@ -21,14 +21,28 @@ ansible/
 
 2. Run a playbook:
    ```bash
-   ansible-playbook -i inventory/hosts playbooks/setup.yml
+   ansible-playbook -i inventory/hosts playbooks/your-playbook.yml
    ```
 
-## Example Playbooks
+## Example Playbook Structure
 
+You can create playbooks like:
 - `playbooks/base.yml` - Base system setup
 - `playbooks/desktop.yml` - Desktop environment configuration
 - `playbooks/development.yml` - Development tools installation
+
+Example playbook content:
+```yaml
+---
+- name: Base System Setup
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Update system
+      pacman:
+        update_cache: yes
+        upgrade: yes
+```
 
 ## Notes
 

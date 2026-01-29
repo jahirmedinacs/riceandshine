@@ -41,23 +41,26 @@ riceandshine/
    sudo pacman -S ansible
    ```
 
-3. **Run Ansible playbooks:**
+3. **Run Ansible playbooks (after creating your own):**
    ```bash
    cd ansible
-   ansible-playbook -i inventory/hosts playbooks/setup.yml
+   # Create your playbook first (see ansible/README.md for examples)
+   ansible-playbook -i inventory/hosts playbooks/your-setup.yml
    ```
 
 4. **Deploy dotfiles:**
    ```bash
    # Using GNU Stow (recommended)
+   # First, structure your dotfiles to match your home directory layout
    sudo pacman -S stow
    cd dotfiles
+   # Example: if you have dotfiles/home/.bashrc, this will symlink it to ~/.bashrc
    stow -t ~ home
-   stow -t ~/.config config
    
-   # Or manually copy files
-   cp -r dotfiles/config/* ~/.config/
-   cp -r dotfiles/home/.[!.]* ~/
+   # Or manually copy files (adjust paths as needed)
+   cp -r dotfiles/config/* ~/.config/ 2>/dev/null || true
+   # Copy dotfiles from home directory (if any exist)
+   find dotfiles/home -maxdepth 1 -name '.*' -type f -exec cp {} ~/ \;
    ```
 
 ## 🧹 System Maintenance
